@@ -1,0 +1,25 @@
+{
+  "name": "trailer-downloader",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Kearn",
+  "license": "ISC",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "request-json": "^0.6.5",
+    "ytdl-core": "^3.1.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdamKearn/trailer-downloader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdamKearn/trailer-downloader/issues"
+  },
+  "homepage": "https://github.com/AdamKearn/trailer-downloader#readme",
+  "description": ""
+}
