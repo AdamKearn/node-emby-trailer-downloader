@@ -8,6 +8,7 @@
   "author": "Adam Kearn",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "request-json": "^0.6.5",
     "ytdl-core": "^3.1.2"

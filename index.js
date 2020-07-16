@@ -1,3 +1,4 @@
+const config = require('./config');
 const request = require('request-json');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
@@ -6,23 +7,23 @@ const readline = require('readline');
 const path = require('path');
 
 const embyAPI = {
-  https: process.env.https || false,
-  host: process.env.ip || process.env.fqdn || undefined,
-  port: process.env.PORT || 8096,
+  protocol: process.env.emby_protocol || false,
+  host: process.env.emby_host || 'http://',
+  port: process.env.emby_port || 8096,
   api_key: process.env.emby_api_key || undefined
 }
 
 const tmdbAPI = {
   url: 'https://api.themoviedb.org/3/',
-  api_key: process.env.tmdb_api_key || undefined
+  api_key: process.env.tmdb_api_key || undefined,
+  lang: process.env.language || 'en'
 }
 
 if (embyAPI.api_key == undefined ) { throw new Error('EMBY API_KEY is required.') }
 if (tmdbAPI.api_key == undefined ) { throw new Error('TMDB API_KEY is required.') }
 
 let emby_API_url = ''
-if (embyAPI.https) { emby_API_url += 'https://'; }
-if (!embyAPI.https) { emby_API_url += 'http://'; }
+emby_API_url += embyAPI.protocol;
 if (embyAPI.host != undefined ) { emby_API_url += embyAPI.host; }
 if (embyAPI.host == undefined ) { throw new Error('Emby server IP/FQDN was not supplied.') }
 emby_API_url += ':' + embyAPI.port + '/emby/';
@@ -54,7 +55,7 @@ const start = async () => {
   // Hard coded for now.
   const items = await getItemsFromParentID('b8bb41f1a97845838e5f6494486d7b62');
   await asyncForEach(items, async (item) => {
-    const key = await getTrailerKey(item.Type, item.ProviderIds.Tmdb, 'en');
+    const key = await getTrailerKey(item.Type, item.ProviderIds.Tmdb, tmdbAPI.lang);
     const downloadComplete = await downloadTrailer(key, "path");
 
     if (downloadComplete) { console.log('\n' + '='.repeat(30) + '\n'); }
