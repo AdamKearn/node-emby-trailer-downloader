@@ -1,5 +1,5 @@
 {
-  "name": "trailer-downloader",
+  "name": "node-emby-trailer-downloader",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -16,11 +16,11 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AdamKearn/trailer-downloader.git"
+    "url": "git+https://github.com/AdamKearn/node-emby-trailer-downloader.git"
   },
   "bugs": {
-    "url": "https://github.com/AdamKearn/trailer-downloader/issues"
+    "url": "https://github.com/AdamKearn/node-emby-trailer-downloader/issues"
   },
-  "homepage": "https://github.com/AdamKearn/trailer-downloader#readme",
-  "description": ""
+  "homepage": "https://github.com/AdamKearn/node-emby-trailer-downloader#readme",
+  "description": "A simple node project that uses the Emby API with TMDB API to download trailers for your media collection."
 }
