@@ -1,4 +1,4 @@
-const config = require('./config');
+const { embyAPI, tmdbAPI } = require('./config');
 const request = require('request-json');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
@@ -6,29 +6,7 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const embyAPI = {
-  protocol: process.env.emby_protocol || false,
-  host: process.env.emby_host || 'http://',
-  port: process.env.emby_port || 8096,
-  api_key: process.env.emby_api_key || undefined
-}
-
-const tmdbAPI = {
-  url: 'https://api.themoviedb.org/3/',
-  api_key: process.env.tmdb_api_key || undefined,
-  lang: process.env.language || 'en'
-}
-
-if (embyAPI.api_key == undefined ) { throw new Error('EMBY API_KEY is required.') }
-if (tmdbAPI.api_key == undefined ) { throw new Error('TMDB API_KEY is required.') }
-
-let emby_API_url = ''
-emby_API_url += embyAPI.protocol;
-if (embyAPI.host != undefined ) { emby_API_url += embyAPI.host; }
-if (embyAPI.host == undefined ) { throw new Error('Emby server IP/FQDN was not supplied.') }
-emby_API_url += ':' + embyAPI.port + '/emby/';
-
-const emby = request.createClient(emby_API_url);
+const emby = request.createClient(embyAPI.url);
 emby.headers['X-Emby-Token'] = embyAPI.api_key;
 
 const tmdb = request.createClient(tmdbAPI.url);
