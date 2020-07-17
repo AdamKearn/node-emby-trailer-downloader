@@ -1,25 +1,12 @@
-const { embyAPI, tmdbAPI } = require('./config');
-const request = require('request-json');
+const { language } = require('./config');
+const { getItemsFromParentID } = require('./lib/embyAPIRequests.js');
+const { getTrailerKey } = require('./lib/tmdbAPIRequests.js');
+
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
-
-const emby = request.createClient(embyAPI.endpoint);
-emby.headers['X-Emby-Token'] = embyAPI.api_key;
-
-const tmdb = request.createClient(tmdbAPI.endpoint);
-
-function getItemsFromParentID(id) {
-  return new Promise(function(resolve, reject) {
-    console.log('Sending request to EMBY API...');
-    emby.get(`Items?ParentId=${id}&Fields=ProviderIds%2C%20Path`, function(err, res, body) {
-      console.log('[EMBY]: Found all items under ParentID:', id)
-      resolve(body.Items)
-    });
-  });
-}
 
 // I didn't know how to do this.
 // Source: https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
@@ -33,31 +20,13 @@ const start = async () => {
   // Hard coded for now.
   const items = await getItemsFromParentID('b8bb41f1a97845838e5f6494486d7b62');
   await asyncForEach(items, async (item) => {
-    const key = await getTrailerKey(item.Type, item.ProviderIds.Tmdb, tmdbAPI.lang);
+    const key = await getTrailerKey(item.Type, item.ProviderIds.Tmdb, language);
     const downloadComplete = await downloadTrailer(key, "path");
 
     if (downloadComplete) { console.log('\n' + '='.repeat(30) + '\n'); }
   });
 }
 start();
-
-function getTrailerKey(type, id, lang) {
-  return new Promise(function(resolve, reject) {
-    if (type === 'Series') { type = 'tv' }
-    else if (type === 'Movie') { type = 'movie' }
-    else {
-      throw new Error(`Could not process type: ${type}.` +
-                      `\nPlease use a type supported by TMDB.\n`);
-    }
-
-    console.log('Sending request to TMDB...');
-    tmdb.get(`${type}/${id}/videos?language=${lang}&api_key=${tmdbAPI.api_key}`, function(err, res, body) {
-      const result = body.results[0].key;
-      console.log('[TMDB]: Found trailer for requested item. [YT]:', result)
-      resolve(result);
-    });
-  });
-}
 
 async function downloadTrailer(key, path) {
   return new Promise(async function(resolve, reject) {

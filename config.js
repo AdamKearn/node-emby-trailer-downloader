@@ -3,6 +3,8 @@ const environmentVariables = dotenv.config();
 
 if ( environmentVariables.error ) { throw environmentVariables.error; }
 
+const language = process.env.language || 'en'
+
 const embyAPI = {
   api_key: process.env.emby_api_key || undefined,
   host: process.env.emby_host || undefined,
@@ -16,9 +18,8 @@ embyAPI.endpoint = `${embyAPI.host}/emby/`
 const tmdbAPI = {
   api_key: process.env.tmdb_api_key || undefined,
   endpoint: 'https://api.themoviedb.org/3/',
-  lang: process.env.language || 'en'
 }
 
 if (tmdbAPI.api_key == undefined ) { throw new Error('[TMDB]: API_KEY is required.'); }
 
-module.exports = { embyAPI, tmdbAPI };
+module.exports = { language, embyAPI, tmdbAPI };
