@@ -6,15 +6,16 @@ if ( environmentVariables.error ) { throw environmentVariables.error; }
 const embyAPI = {
   api_key: process.env.emby_api_key || undefined,
   host: process.env.emby_host || undefined,
+  // endpoint key and value will be populated later in the code.
 }
 
 if (embyAPI.api_key == undefined ) { throw new Error('[EMBY]: API_KEY is required.'); }
 if (embyAPI.host == undefined ) { throw new Error('[EMBY]: Server IP/FQDN was not supplied.') }
-embyAPI.url = `${embyAPI.host}/emby/`
+embyAPI.endpoint = `${embyAPI.host}/emby/`
 
 const tmdbAPI = {
   api_key: process.env.tmdb_api_key || undefined,
-  url: 'https://api.themoviedb.org/3/',
+  endpoint: 'https://api.themoviedb.org/3/',
   lang: process.env.language || 'en'
 }
 

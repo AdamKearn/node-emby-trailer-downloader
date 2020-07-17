@@ -6,10 +6,10 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const emby = request.createClient(embyAPI.url);
+const emby = request.createClient(embyAPI.endpoint);
 emby.headers['X-Emby-Token'] = embyAPI.api_key;
 
-const tmdb = request.createClient(tmdbAPI.url);
+const tmdb = request.createClient(tmdbAPI.endpoint);
 
 function getItemsFromParentID(id) {
   return new Promise(function(resolve, reject) {
