@@ -1,7 +1,7 @@
 const { language } = require('./config');
 const { getItemsFromParentID } = require('./lib/embyAPIRequests.js');
 const { getTrailerKey } = require('./lib/tmdbAPIRequests.js');
-const { downloadTrailer } = require('./lib/trailerHandler.js');
+const { getTrailer } = require('./lib/trailerHandler.js');
 
 // I didn't know how to do this.
 // Source: https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
@@ -16,9 +16,9 @@ const start = async () => {
   const items = await getItemsFromParentID('b8bb41f1a97845838e5f6494486d7b62');
   await asyncForEach(items, async (item) => {
     const key = await getTrailerKey(item.Type, item.ProviderIds.Tmdb, language);
-    const downloadComplete = await downloadTrailer(key, "path");
+    const trailer = await getTrailer(key, "path");
 
-    if (downloadComplete) { console.log('\n' + '='.repeat(30) + '\n'); }
+    if (trailer) { console.log('\n' + '='.repeat(30) + '\n'); }
   });
 }
 start();
