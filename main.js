@@ -3,7 +3,7 @@ const { MultiSelect } = require('enquirer');
 const { language } = require('./config');
 const { getMediaFolders, getItemsFromParentID } = require('./lib/embyAPIRequests.js');
 const { getTrailerKey } = require('./lib/tmdbAPIRequests.js');
-const { getTrailer } = require('./lib/trailerHandler.js');
+const { getTrailerOutputDetails, getTrailer } = require('./lib/trailerHandler.js');
 
 function selectMediaFolders() {
   return new Promise(async function(resolve, reject) {
@@ -52,7 +52,8 @@ async function getSelectedFoldersItems(mediaFolders) {
         allItems.push({
           name: item.Name,
           type: item.Type,
-          tmdb: item.ProviderIds.Tmdb
+          tmdb: item.ProviderIds.Tmdb,
+          path: item.Path
         });
       });
     }
@@ -67,7 +68,9 @@ const start = async () => {
 
   await asyncForEach(items, async (item) => {
     const key = await getTrailerKey(item.type, item.tmdb, language);
-    const trailer = await getTrailer(key, "path");
+    const outputPath = await getTrailerOutputDetails(item);
+
+    const trailer = await getTrailer(key, outputPath);
 
     if (trailer) { console.log('\n' + '='.repeat(30) + '\n'); }
   });
