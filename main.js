@@ -1,4 +1,5 @@
 const { MultiSelect } = require('enquirer');
+const fs = require('fs');
 
 const { language } = require('./config');
 const { getMediaFolders, getItemsFromParentID } = require('./lib/embyAPIRequests.js');
@@ -69,6 +70,13 @@ const start = async () => {
   await asyncForEach(items, async (item) => {
     const key = await getTrailerKey(item.type, item.tmdb, language);
     const outputPath = await getTrailerOutputDetails(item);
+
+    if (item.type === 'Series') {
+      const trailerFolderPath = item.path + '/Trailers/'
+      if (!fs.existsSync(trailerFolderPath)){
+          fs.mkdirSync(trailerFolderPath);
+      }
+    }
 
     const trailer = await getTrailer(key, outputPath);
 
